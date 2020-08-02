@@ -20,7 +20,6 @@ namespace scottz0r
         StringSlice() noexcept
             : m_str(nullptr), m_size(0)
         {
-
         }
 
         /// Construct with a string. This will loop until a null character is found. Does not include terminating
@@ -96,16 +95,15 @@ namespace scottz0r
 
         /// @see copy_to.
         template<size_type _Size>
-        inline size_type copy_to(char(&dst)[_Size])
+        inline size_type copy_to(char(&dst)[_Size]) const
         {
             return copy_to(dst, _Size);
         }
 
-
         /// Copy this slice to a character buffer. This will always null terminate. Returns the number of
         /// characters copied, not including the null terminator. If the destination buffer is too small, the
         /// result will be truncated.
-        size_type copy_to(char* dst, size_type dst_size)
+        size_type copy_to(char* dst, size_type dst_size) const
         {
             if (!dst || dst_size == 0)
             {
@@ -158,7 +156,7 @@ namespace scottz0r
         }
 
         /// Returns a new slice without leading whitespace.
-        StringSlice lstrip() noexcept
+        StringSlice lstrip() const noexcept
         {
             size_type i = 0;
             for (; i < m_size; ++i)
@@ -173,7 +171,7 @@ namespace scottz0r
         }
 
         /// Returns a new slice without trailing whitespace.
-        StringSlice rstrip() noexcept
+        StringSlice rstrip() const noexcept
         {
             if (m_size == 0)
             {
@@ -202,7 +200,7 @@ namespace scottz0r
         size_type size() const noexcept { return m_size; }
 
         /// @brief Return a new slice with leading and trailing whitespace removed.
-        StringSlice strip() noexcept
+        StringSlice strip() const noexcept
         {
             return rstrip().lstrip();
         }
@@ -237,13 +235,13 @@ namespace scottz0r
         }
 
         /// Returns true if this slice is not empty.
-        explicit operator bool() noexcept
+        explicit operator bool() const noexcept
         {
             return m_size > 0;
         }
 
         /// Returns true if this slice is empty.
-        bool operator!() noexcept
+        bool operator!() const noexcept
         {
             return m_size == 0;
         }
@@ -297,7 +295,7 @@ namespace scottz0r
 
     private:
 
-        inline bool is_whitespace(char c) noexcept
+        inline bool is_whitespace(char c) const noexcept
         {
             return c == '\r' || c == '\n' || c == '\t' || c == ' ';
         }

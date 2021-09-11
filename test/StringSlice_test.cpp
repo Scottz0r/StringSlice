@@ -230,30 +230,112 @@ namespace string_slice_tests
 
     TEST_CASE("StringSlice_Stripping")
     {
-        const char* test_data = "\r\nTest\t ";
-
         SECTION("lstrip")
         {
-            StringSlice ss(test_data);
-            StringSlice stripped = ss.lstrip();
+            StringSlice ss;
+            StringSlice stripped;
 
+            // Right and left whitespace
+            ss = "\r\nTest\t ";
+            stripped = ss.lstrip();
             REQUIRE(stripped == "Test\t ");
+
+            // Right whitespace
+            ss = "TEST \r\n";
+            stripped = ss.lstrip();
+            REQUIRE(stripped == "TEST \r\n");
+
+            // Left whitespace
+            ss = "\r\nTEST";
+            stripped = ss.lstrip();
+            REQUIRE(stripped == "TEST");
+
+            // All whitespace
+            ss = "  \r\n";
+            stripped = ss.lstrip();
+            REQUIRE(stripped == "");
+
+            // No whitespace
+            ss = "AB";
+            stripped = ss.lstrip();
+            REQUIRE(stripped == "AB");
+
+            // Empty string
+            ss = "";
+            stripped = ss.lstrip();
+            REQUIRE(stripped == "");
         }
 
         SECTION("rstrip")
         {
-            StringSlice ss(test_data);
-            StringSlice stripped = ss.rstrip();
+            StringSlice ss;
+            StringSlice stripped;
 
+            // Right and left whitespace
+            ss = "\r\nTest\t ";
+            stripped = ss.rstrip();
             REQUIRE(stripped == "\r\nTest");
+
+            // Right whitespace
+            ss = "TEST \r\n";
+            stripped = ss.rstrip();
+            REQUIRE(stripped == "TEST");
+
+            // Left whitespace
+            ss = "\r\nTEST";
+            stripped = ss.rstrip();
+            REQUIRE(stripped == "\r\nTEST");
+
+            // All whitespace
+            ss = "  \r\n";
+            stripped = ss.rstrip();
+            REQUIRE(stripped == "");
+
+            // No whitespace
+            ss = "AB";
+            stripped = ss.rstrip();
+            REQUIRE(stripped == "AB");
+
+            // Empty string
+            ss = "";
+            stripped = ss.rstrip();
+            REQUIRE(stripped == "");
         }
 
         SECTION("strip")
         {
-            StringSlice ss(test_data);
-            StringSlice stripped = ss.strip();
+            StringSlice ss;
+            StringSlice stripped;
 
+            // Right and left whitespace
+            ss = "\r\nTest\t ";
+            stripped = ss.strip();
             REQUIRE(stripped == "Test");
+
+            // Right whitespace
+            ss = "TEST \r\n";
+            stripped = ss.strip();
+            REQUIRE(stripped == "TEST");
+
+            // Left whitespace
+            ss = "\r\nTEST";
+            stripped = ss.strip();
+            REQUIRE(stripped == "TEST");
+
+            // All whitespace
+            ss = "  \r\n";
+            stripped = ss.strip();
+            REQUIRE(stripped == "");
+
+            // No whitespace
+            ss = "AB";
+            stripped = ss.strip();
+            REQUIRE(stripped == "AB");
+
+            // Empty string
+            ss = "";
+            stripped = ss.strip();
+            REQUIRE(stripped == "");
         }
     }
 

@@ -3,8 +3,7 @@
 #ifndef _SCOTTZ0R_STRING_SLICE_INCLUDE_GUARD
 #define _SCOTTZ0R_STRING_SLICE_INCLUDE_GUARD
 
-#include <cstddef>
-#include <limits>
+#include <inttypes.h>
 
 namespace scottz0r
 {
@@ -13,8 +12,8 @@ namespace scottz0r
     class StringSlice
     {
     public:
-        using size_type = std::size_t;
-        static constexpr size_type npos = std::numeric_limits<size_type>::max();
+        using size_type = unsigned int;
+        static constexpr size_type npos = (size_type)-1;
 
         /// Default construct to an empty slice.
         StringSlice() noexcept
@@ -158,42 +157,41 @@ namespace scottz0r
         /// Returns a new slice without leading whitespace.
         StringSlice lstrip() const noexcept
         {
-            size_type i = 0;
-            for (; i < m_size; ++i)
+            const char* p = m_str;
+            const char* end = m_str + m_size;
+
+            while (p < end)
             {
-                if (!is_whitespace(m_str[i]))
+                if (!is_whitespace(*p))
                 {
                     break;
                 }
+
+                ++p;
             }
 
-            return StringSlice(m_str + i, m_size - i);
+            size_type new_size = end - p;
+            return StringSlice(p, new_size);
         }
 
         /// Returns a new slice without trailing whitespace.
         StringSlice rstrip() const noexcept
         {
-            if (m_size == 0)
-            {
-                return StringSlice();
-            }
+            const char* p = m_str + m_size;
 
-            size_type i = m_size - 1;
-            for (; i > 0; --i)
+            while ((p--) > m_str)
             {
-                if (!is_whitespace(m_str[i]))
+                if (!is_whitespace(*p))
                 {
                     break;
                 }
             }
 
-            // Return empty slice if reached the first character and it should be trimmed.
-            if (i == 0 && is_whitespace(m_str[i]))
-            {
-                return StringSlice();
-            }
+            // Increment pointer because of post decrement in while loop.
+            ++p;
 
-            return StringSlice(m_str, i + 1);
+            size_type new_size = p - m_str;
+            return StringSlice(m_str, new_size);
         }
 
         /// Returns the number of characters in the slice.
@@ -306,7 +304,7 @@ namespace scottz0r
 
     /// Converts a character buffer to a slice using a C++ array size template. This assumes the character buffer
     /// is null terminated. The null terminator will not be included in the slice.
-    template<std::size_t Size>
+    template<unsigned int Size>
     constexpr StringSlice to_slice(const char(&str)[Size]) noexcept
     {
         return StringSlice(str, Size - 1);

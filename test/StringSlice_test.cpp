@@ -1,5 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
+#include <cstring>
 
 #include "StringSlice.h"
 
@@ -503,11 +504,22 @@ namespace string_slice_tests
 
     TEST_CASE("to_slice")
     {
-        char buffer[] = "TEST";
-        auto ss = to_slice(buffer);
-        REQUIRE(ss.size() == 4);
-        REQUIRE(ss[0] == 'T');
-        REQUIRE(ss == "TEST");
+        SECTION("String literal")
+        {
+            char buffer[] = "TEST";
+            auto ss = to_slice(buffer);
+            REQUIRE(ss.size() == 4);
+            REQUIRE(ss[0] == 'T');
+            REQUIRE(ss == "TEST");
+        }
+
+        SECTION("Empty string")
+        {
+            char buffer[] = "";
+            auto ss = to_slice(buffer);
+            REQUIRE(ss.size() == 0);
+            REQUIRE(ss.empty());
+        }
     }
 
     TEST_CASE("get_line")

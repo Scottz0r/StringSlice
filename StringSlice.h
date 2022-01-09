@@ -3,8 +3,6 @@
 #ifndef _SCOTTZ0R_STRING_SLICE_INCLUDE_GUARD
 #define _SCOTTZ0R_STRING_SLICE_INCLUDE_GUARD
 
-#include <inttypes.h>
-
 namespace scottz0r
 {
     /// Non owning slice of a string. This has the same lifetime as the m_str pointer. This class does not
@@ -303,10 +301,15 @@ namespace scottz0r
     };
 
     /// Converts a character buffer to a slice using a C++ array size template. This assumes the character buffer
-    /// is null terminated. The null terminator will not be included in the slice.
+    /// is null terminated at the last index. The null terminator at the last index will not be included in the slice.
+    // Null terminators not at the end of the array will be included in the slice.
+    // Using any array of size 0 is undefined.
+    // This is intended for use with constant char arrays (ex: `const char abc[] = "xyz"`).
     template<unsigned int Size>
     constexpr StringSlice to_slice(const char(&str)[Size]) noexcept
     {
+        static_assert(Size != 0, "Buffer size cannot be 0");
+
         return StringSlice(str, Size - 1);
     }
 
